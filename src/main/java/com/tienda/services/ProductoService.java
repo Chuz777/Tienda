@@ -7,7 +7,6 @@ package com.tienda.services;
 import com.tienda.entities.Producto;
 import com.tienda.repositories.ProductoRepository;
 import jakarta.transaction.Transactional;
-import javax.lang.model.SourceVersion;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @Service
 public class ProductoService implements IProductoService{
+    
+    
     @Autowired
     ProductoRepository productoRepository;
     @Override
@@ -42,13 +43,30 @@ public class ProductoService implements IProductoService{
     }
     
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public Optional<Producto> delete(Long id){
         Optional<Producto> producto = this.getById(id);
         if (producto.isPresent()){
             this.productoRepository.deleteById(id);
         }
         return producto;
+    }
+    
+    
+    @Override
+    @Transactional
+    public Optional<Producto> update(Long id, Producto producto) {
+        Optional<Producto> producto1 = this.getById(id);
+        if(producto1.isPresent()){
+            Producto prod = producto1.orElseThrow();
+            
+            prod.setNombre(producto.getNombre());
+            prod.setPrecio(prod.getPrecio());
+            
+            return Optional.of(this.productoRepository.save(producto));
+        }
+        
+        return producto1;
     }
     
     
