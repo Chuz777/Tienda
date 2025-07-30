@@ -4,10 +4,13 @@
  */
 package com.tienda.repositories;
 
+import com.tienda.entities.Persona;
+import org.springframework.data.repository.CrudRepository;
+
 /**
  *
  * @author Chuz
  */
-public class PersonaRepository {
+public interface PersonaRepository extends CrudRepository<Persona, Long> {
     
 }
