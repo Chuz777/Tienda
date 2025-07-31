@@ -4,21 +4,57 @@
  */
 package com.tienda.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class Persona {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank
+    @Column(length = 100, nullable = false)
     private String nombre;
+
+    @NotBlank
+    @Column(length = 100, nullable = false)
     private String apellido;
+
+    @NotBlank
+    @Email
+    @Column(length = 191, nullable = false, unique = true)
     private String email;
+
+    @Column(length = 30)
     private String telefono;
+
+    @Column(length = 255)
     private String direccion;
+
+    @NotBlank
+    @Column(length = 100, nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private int active = 1;
+
+    @Column(length = 255)
+    private String roles = "";
+
+    @Column(length = 500)
+    private String permissions = "";
 
     public Long getId() {
         return id;
@@ -67,7 +103,92 @@ public class Persona {
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
-    
-    
-    
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles != null ? roles : "";
+    }
+
+    public String getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(String permissions) {
+        this.permissions = permissions != null ? permissions : "";
+    }
+
+    /*====== Helpers ======*/
+    /**
+     * Devuelve true si el usuario está habilitado.
+     */
+    @Transient
+    public boolean isEnabled() {
+        return this.active == 1;
+    }
+
+    /**
+     * Lista de roles normalizados (sin espacios, en MAYÚSCULAS).
+     */
+    @Transient
+    public List<String> getRoleList() {
+        if (roles == null || roles.isBlank()) {
+            return new ArrayList<>();
+        }
+        return Arrays.stream(roles.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .map(String::toUpperCase)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Lista de permisos normalizados (sin espacios).
+     */
+    @Transient
+    public List<String> getPermissionList() {
+        if (permissions == null || permissions.isBlank()) {
+            return new ArrayList<>();
+        }
+        return Arrays.stream(permissions.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+    }
+
+    /* Métodos de conveniencia para agregar roles/permissions */
+    public void addRole(String role) {
+        if (role == null || role.isBlank()) {
+            return;
+        }
+        List<String> list = getRoleList();
+        String r = role.trim().toUpperCase();
+        if (!list.contains(r)) {
+            list.add(r);
+            this.roles = String.join(",", list);
+        }
+    }
+
+    public void addPermission(String permission) {
+        if (permission == null || permission.isBlank()) {
+            return;
+        }
+        List<String> list = getPermissionList();
+        String p = permission.trim();
+        if (!list.contains(p)) {
+            list.add(p);
+            this.permissions = String.join(",", list);
+        }
+    }
+
 }

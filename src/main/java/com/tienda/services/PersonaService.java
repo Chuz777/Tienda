@@ -32,4 +32,7 @@ public class PersonaService {
     public Optional<Persona> getById(Long id) {
         return personaRepository.findById(id);
     }
+    public void delete(Long id){
+        personaRepository.deleteById(id);
+    }
 }

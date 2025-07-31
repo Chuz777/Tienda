@@ -1,13 +1,18 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.tienda.services;
 
-/**
- *
- * @author Chuz
- */
-public class IProductoService {
-    
+import com.tienda.entities.Producto;
+import java.util.List;
+import java.util.Optional;
+
+public interface IProductoService {
+
+    Producto save(Producto producto);
+
+    List<Producto> findAll();
+
+    Optional<Producto> getById(Long id);
+
+    Optional<Producto> delete(Long id);
+
+    Optional<Producto> update(Long id, Producto producto);
 }

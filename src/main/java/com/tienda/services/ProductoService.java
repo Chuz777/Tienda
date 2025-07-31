@@ -6,11 +6,11 @@ package com.tienda.services;
 
 import com.tienda.entities.Producto;
 import com.tienda.repositories.ProductoRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -25,7 +25,7 @@ public class ProductoService implements IProductoService{
     @Override
     @Transactional
     public Producto save(Producto Producto){
-        return this.productoRepository.save(producto);
+        return this.productoRepository.save(Producto);
     
     }
 

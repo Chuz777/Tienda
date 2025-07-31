@@ -10,7 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import org.springframework.ui.Model;
+
 
 
 @Controller
@@ -23,7 +27,7 @@ public class PersonaController {
     @GetMapping
     public String listarPersonas(Model model){
     
-        model.addAtribute("personas", personaService.listarTodas());
+        model.addAttribute("personas", personaService.findAll());
         return "test";
     }
     
@@ -33,18 +37,18 @@ public class PersonaController {
     }
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevaPersona(Model model) {
-        model.addAtribute("persona", new Persona());
+        model.addAttribute("persona", new Persona());
         return "persona-form";
     }
     
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditarPersona(@PathVariable Long id, Model model) {
-        model.addAtribute("persona", personaService.obtenerPorId(id));
+        model.addAttribute("persona", personaService.getById(id));
         return "persona-form";
     }
     @GetMapping("/eliminar/{id}")
-    public String mostrarFormularioEditarPersona(@PathVariable Long id) {
-       personaService.eliminar(id));
+    public String eliminarPersona(@PathVariable Long id) {
+       personaService.delete(id);
         return "redirect:/personas";
     }
     
